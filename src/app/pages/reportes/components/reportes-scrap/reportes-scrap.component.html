@@ -1,0 +1,210 @@
+<app-reportes-toolbar></app-reportes-toolbar>
+
+<!-- Button trigger modal -->
+
+
+<div class="container">
+
+
+    <form class="form-inline mt-2" #barCodeIn="ngForm" (ngSubmit)="onSubmit(barCodeIn); barCodeIn.reset()" autocomplete="off">
+        <div class="form-group col-3">
+            <input type="text" class="form-control w-100" id="barCodeField" name="pcbCode" #pcbCode="ngModel" [(ngModel)]="barCode" placeholder="Bar Code..." focus>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-outline-dark" [disabled]="!pcbCode.valid"> <fa-icon [icon]="in"> </fa-icon>  </button>
+        </div>
+        <div class="form-group">
+            <div class="alert alert-danger ml-2" *ngIf="invalido"> Código Invalido</div>
+            <div class="alert alert-warning ml-2" *ngIf="vacio"> Código Vacío</div>
+        </div>
+    </form>
+
+    <div class="contenedor" *ngIf="barCodeArray.length>0">
+        <table class="table tabla-barcodes" *ngIf="barCodeArray.length>0">
+            <thead>
+                <tr>
+                    <th scope="col">Placas</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let barcode of barCodeArray">
+                    <th>{{barcode}}</th>
+                    <td style="text-align: end;">
+                        <button class="btn btn-danger" (click)="quitarPlaca(barcode)">
+                        <fa-icon [icon]="minusCircle"> </fa-icon>
+                    </button>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-block btn-primary" (click)="enviarArray(barCodeArray)">Enviar</button>
+        <div *ngIf="enviando && !datos">
+            <app-spinner-master></app-spinner-master>
+        </div>
+    </div>
+
+    <table class="table table-hover" *ngIf="datos">
+        <thead>
+            <tr>
+                <th scope="col">Codigo de Placa</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Lote</th>
+                <th scope="col">Panel</th>
+                <th scope="col">OP</th>
+                <th scope="col">Semi-Elaborado</th>
+                <th scope="col"></th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr *ngFor="let dato of datos" class="fila-datos" (click)="solicitarReporte(dato)" data-toggle="modal" data-target="#exampleModal">
+                <th scope="row">
+                    {{dato.barcode}}
+                </th>
+                <td>
+                    <div *ngIf="dato.estado==1">
+                        {{dato[0].modelo}}
+                    </div>
+                    <div *ngIf="dato.estado==0">
+                        -
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="dato.estado==1">
+                        {{dato[0].lote}}
+                    </div>
+                    <div *ngIf="dato.estado==0">
+                        -
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="dato.estado==1">
+                        {{dato[0].panel}}
+                    </div>
+                    <div *ngIf="dato.estado==0">
+                        -
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="dato.estado==1">
+                        {{dato[0].op}}
+                    </div>
+                    <div *ngIf="dato.estado==0">
+                        -
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="dato.estado==1">
+                        {{dato[0].semielaborado}}
+                    </div>
+                    <div *ngIf="dato.estado==0">
+                        -
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="dato.estado==1">
+                        <fa-icon [icon]="check"></fa-icon>
+                    </div>
+                    <div *ngIf="dato.estado==0">
+                        <span class="badge badge-danger">No encontrado</span>
+                    </div>
+                </td>
+
+
+            </tr>
+        </tbody>
+        <button class="btn btn-block btn-warning" (click)="limpiar()">Limpiar</button>
+    </table>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Reporte para <b>Barcode:</b> {{datosReporte.barcode}} - <b>Modelo:</b> {{datosReporte.modelo}} -<b>Lote: </b> {{datosReporte.lote}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row align-items-center" *ngIf="reporte">
+                        <div class="col-2">
+                            <span class="badge badge-dark">
+                                Paneles
+                            </span>
+                        </div>
+                        <div *ngIf="!paneles_option">
+                            <app-spinner-master></app-spinner-master>
+                        </div>
+                        <div class="form-check form-check-inline m-2" *ngFor="let panel of paneles_option">
+                            <input class="form-check-input" type="radio" type="radio" name="logop" (change)="filtro($event,panel.logop)" [disabled]="verListado">
+                            <label class="form-check-label" for="inlineCheckbox1">{{panel.logop}}</label>
+                        </div>
+                    </div>
+                    <div class="row align-items-center" *ngIf="options_procesos">
+                        <div class="col-2">
+                            <span class="badge badge-info">
+                            Procesos
+                            </span>
+                        </div>
+                        <div class="form-check form-check-inline m-2" *ngFor="let proceso of options_procesos" (change)="filtro2($event,proceso)">
+                            <input class="form-check-input" type="radio" name="proceso" [disabled]="verListado">
+                            <label class="form-check-label" for="inlineCheckbox1">{{proceso}}</label>
+                        </div>
+
+                    </div>
+                    <div *ngIf="habilitarBoton" class="container">
+                        <div class="row">
+                            <div class="col-6 align-self-center" *ngIf="verListado">
+                                <button class="btn btn-block btn-danger" (click)="showListado()">Cambiar Criterios de Búsqueda</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+                    <div class="col-5" *ngIf="verListado">
+                        <input class="form-control mr-sm-2" type="search" name="filterReporte" [(ngModel)]="filterReporte" placeholder="escribe algo...">
+                    </div>
+                    <div class="row" *ngIf="verListado">
+                        Registros: <span class="badge badge-info">{{(showReporte | filterReporte: filterReporte).length}}</span>
+                    </div>
+                    <div class="row" *ngIf="verListado">
+                        <button type="button" class="btn btn-primary" (click)="exportarExcel()">Exportar</button>
+                    </div>
+
+
+                </div>
+                <table class="table" *ngIf="verListado" id="reporte">
+                    <thead>
+                        <tr>
+                            <th scope="col">Semi</th>
+                            <th scope="col">Version</th>
+                            <th scope="col">Panel</th>
+                            <th scope="col">Posicion</th>
+                            <th scope="col">PartNumber</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Proceso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dato of showReporte | filterReporte: filterReporte ">
+                            <th>{{dato.bom}}</th>
+                            <td>{{dato.lote_version}}</td>
+                            <td>{{dato.logop}}</td>
+                            <td>{{dato.posicion}}</td>
+                            <td>{{dato.componente}}</td>
+                            <td>{{dato.cantidad}}</td>
+                            <td>{{dato.asignacion}}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="exportarExcel()" *ngIf="verListado">Exportar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

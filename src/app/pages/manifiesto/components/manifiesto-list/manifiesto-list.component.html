@@ -1,0 +1,64 @@
+<app-manifiesto-toolbar></app-manifiesto-toolbar>
+<div class="contenedor">
+
+
+    <div class="row mt-2 justify-content-end">
+        <div class="col-2">
+            <div class="form-group">
+                <input class="form-control" type="search" placeholder="Buscar..." name="filterManifiesto" [(ngModel)]="filterManifiesto" aria-label="Search">
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!manifiestos">
+        <app-spinner-master></app-spinner-master>
+    </div>
+
+    <div class="row" *ngIf="manifiestos">
+        <div class="col-12">
+            <div>
+                <table matSort (matSortChange)="sortManifiesto($event)" class="table my-list mt-5 text-center" id="cars-list">
+                    <thead class="thead" id="thead">
+                        <tr>
+                            <th mat-sort-header="op"> OP</th>
+                            <th mat-sort-header="modelo"> Modelo </th>
+                            <th mat-sort-header="lote"> Lote </th>
+                            <th mat-sort-header="panel"> Panel </th>
+                            <th mat-sort-header="linea"> Línea </th>
+                            <th mat-sort-header="carril"> Carril </th>
+                            <th mat-sort-header="lado"> Lado </th>
+                            <th mat-sort-header="programador"> Programador </th>
+                            <th mat-sort-header="fecha_creacion"> Creado</th>
+                            <th mat-sort-header="fecha_update"> Modificado</th>
+                            <th mat-sort-header="modo"> Modo </th>
+                            <!-- <th> </th> -->
+                        </tr>
+                    </thead>
+                    <tr class="fila" *ngFor="let manifiesto of sortedManifiesto |paginate: {itemsPerPage: 20, currentPage: pActual } |filterManifiesto: filterManifiesto" [routerLink]="['/manifiesto/detail',manifiesto.id]">
+                        <td>
+                            {{manifiesto.op}}
+                        </td>
+                        <td> {{manifiesto.modelo}} </td>
+                        <td> {{manifiesto.lote}} </td>
+                        <td> {{manifiesto.panel}} </td>
+                        <td> {{manifiesto.linea}} </td>
+                        <td> {{manifiesto.carril}} </td>
+                        <td> {{manifiesto.lado}} </td>
+                        <td> {{manifiesto.user.name}} {{manifiesto.user.surname}} </td>
+                        <td> {{manifiesto.created_at.day}}/{{manifiesto.created_at.month}}/{{manifiesto.created_at.year}} {{manifiesto.created_at.hour}}:{{manifiesto.created_at.minutes}} </td>
+                        <td> {{manifiesto.updated_at.day}}/{{manifiesto.updated_at.month}}/{{manifiesto.updated_at.year}} {{manifiesto.updated_at.hour}}:{{manifiesto.updated_at.minutes}} </td>
+                        <td *ngIf=" manifiesto.manual==1 "> <span class="badge badge-danger " data-toggle="tooltip " data-placement="top " title="{{manifiesto.comentario}} ">                            MANUAL                        </span> </td>
+                        <td *ngIf="manifiesto.manual==0 "> <span class="badge badge-success ">                            AUTOMATICO                        </span> </td>
+                        <!-- <td> <button class="btn btn-sm btn-primary " [routerLink]="[ '/manifiesto/detail',manifiesto.id] ">Ver</button> </td> -->
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+        <div class="text-center ">
+            <pagination-controls (pageChange)="pActual=$event "></pagination-controls>
+        </div>
+    </div>
+
+
+    <!-- fin sin ordenamiento-->
+</div>

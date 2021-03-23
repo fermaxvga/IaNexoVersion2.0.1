@@ -1,0 +1,27 @@
+.jumbotron {
+    margin-left: 10.75%;
+    margin-right: 0.95%;
+    background: rgb(234, 235, 212);
+}
+
+.jumbotron h1 {
+    font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+p {
+    margin: 0 10%;
+    text-align: justify;
+    line-height: 1.5em;
+}
+
+.button-home {
+    background: rgb(18, 3, 105);
+    color: white;
+}
+
+.button-home:hover {
+    background: rgb(0, 0, 0);
+    color: gray;
+}

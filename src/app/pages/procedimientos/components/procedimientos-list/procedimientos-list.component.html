@@ -1,0 +1,226 @@
+<app-procedimientos-toolbar></app-procedimientos-toolbar>
+<div *ngIf="!posts && !tagsPost ">
+    <app-spinner-master></app-spinner-master>
+</div>
+
+
+<div class="contenedor" *ngIf="posts">
+
+    <div *ngIf="error" class="alert alert-danger">Error en la petición : <b>{{error.status}}</b></div>
+
+    <div class="row align-items-center bar">
+        <div class="col categorias-check">
+            <div class="form-check form-check-inline" *ngIf="categorias">
+                <input class="form-check-input" type="radio" name="categoria" (change)="todos()" checked>
+                <label class="form-check-label" for="inlineCheckbox1">Todos</label>
+            </div>
+            <div class="form-check form-check-inline" *ngFor="let categoria of categorias">
+                <input class="form-check-input" type="radio" name="categoria" (change)="selectCategoria(false,categoria)">
+                <label class="form-check-label" for="inlineCheckbox1">{{categoria.categoria}}</label>
+            </div>
+        </div>
+        <div class="input-group categorias-multi  col-6 ">
+            <select class="custom-select" [(ngModel)]="categoriaSelect" (change)="selectCategoria(true,categoriaSelect)">
+              <option *ngFor="let categoria of categorias">{{categoria.categoria}}</option>
+            </select>
+        </div>
+
+
+        <div class="vista-buscar">
+            <form class="form-inline my-2 my-lg-0 float-right">
+                <div class="row align-items-center">
+                    <div class="col-2">
+                        <a class="btn  vista-icon" (click)="vista()">
+                            <fa-icon class="ml-1" [icon]="borderAll" *ngIf="!mosaico" data-toggle="tooltip" data-placement="bottom" title="Cambiar a Mosaico"></fa-icon>
+                            <fa-icon class="ml-1" [icon]="thList" *ngIf="mosaico" data-toggle="tooltip" data-placement="bottom" title="Cambiar a Lista"></fa-icon>
+                        </a>
+                    </div>
+                    <div class="col-10">
+                        <input *ngIf="!filtrar" class="form-control mr-sm-2" type="search" placeholder="escribe algo..." name='filterPost' [(ngModel)]="filterPost" aria-label="Search">
+                        <input *ngIf="filtrar" class="form-control mr-sm-2" type="search" placeholder="escribe algo..." name='filterPostTag' [(ngModel)]="filterPostTag" aria-label="Search">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--        VISTA MOSAICO || VISTA MOSAICO || VISTA MOSAICO || VISTA MOSAICO    -->
+    <div *ngIf="mosaico">
+
+        <div class="row" *ngIf="!filtrar">
+            <div class="col">
+                <div *ngFor="let post of posts | filterProcedimientos: filterPost">
+                    <div class="card float-left">
+                        <div class="card-header">
+                            <h4 class="card-title">
+                                <a href="procedimientos/detail/{{post.id}}">
+                                    {{post.titulo}}
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="comentario">
+                                <p class="card-text">{{post.comentario}}</p>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted ">
+                            <div class="row text-center">
+                                <div class="col align-self-center">
+                                    <a class="documento" href="{{url}}/{{post.id}}/{{post.documento}}" target="_blank">{{post.documento}}
+                                        <fa-icon class="ml-1" [icon]="filePdf"></fa-icon>
+                                    </a>
+                                </div>
+                            </div>
+                            <div *ngFor="let tag of post.tag" class="col-auto float-left mt-3">
+                                <span class="badge badge-pill tag"># {{tag.cat.categoria}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--        SI FILTRAMOS POR CATEGORIA    -->
+
+        <div class="row" *ngIf="filtrar">
+            <div class="col">
+                <div *ngFor="let post of tagsPost | filterPostTag: filterPostTag">
+                    <div class="card float-left">
+                        <div class="card-header">
+                            <h4 class="card-title">
+                                <a href="procedimientos/detail/{{post.post.id}}">
+                                      {{post.post.titulo}}
+                                    </a>
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="comentario">
+                                <p class="card-text">{{post.post.comentario}}</p>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted ">
+                            <div class="row text-center">
+                                <div class="col align-self-center">
+                                    <a class="documento" href="{{url}}/{{post.post.id}}/{{post.post.documento}}" target="_blank">
+                                         {{post.post.documento}}
+                                         <fa-icon class="ml-1" [icon]="filePdf"></fa-icon>
+                                        </a>
+                                </div>
+                            </div>
+                            <div *ngFor="let tag2 of post.post.tag" class="col-auto float-left mt-3">
+                                <span class=" badge badge-pill tag "> {{tag2.cat.categoria}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--        VISTA LISTA || VISTA LISTA || VISTA LISTA || VISTA LISTA    -->
+
+    <div *ngIf="!mosaico">
+
+        <!-- <table class="table mt-3" id="tablaHistorial">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Título</th>
+                    <th scope="col">Comentario</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Tags</th>
+                    <th scope="col">Fecha de Creación</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let post of posts">
+                    <td class="text-left">{{post.titulo}}</td>
+                    <td class="text-left">{{post.comentario}}</td>
+                    <td>{{post.documento}}</td>
+                    <td>
+                        <div *ngFor="let tag of post.tag">{{tag.cat.categoria}}</div>
+                    </td>
+                    <td>{{post.created_at}}</td>
+                </tr>
+
+            </tbody>
+        </table> -->
+        <div class="mi-tabla">
+            <div *ngIf="!filtrar">
+                <div class="row mi-tabla-header">
+                    <div class="col-2 columna">Título</div>
+                    <div class="col-3 columna comentario-head">Comentario</div>
+                    <div class="col-2 columna">Documento</div>
+                    <div class="col-1 columna">Tags</div>
+                    <div class="col columna">Fecha de Creación</div>
+                    <div class="col columna">Usuario</div>
+                </div>
+                <div class="row mi-tabla-body" *ngFor="let post of posts| filterProcedimientos: filterPost">
+                    <div class="col-2 columna mi-tabla-body-titulo"><a href="procedimientos/detail/{{post.id}}">
+                        {{post.titulo}}
+                    </a></div>
+                    <div class="col-3 columna">
+                        <p class="comentario comentario-tabla">
+                            {{post.comentario}}
+                        </p>
+                    </div>
+                    <div class="col-2 columna">
+                        <a href="{{url}}/{{post.id}}/{{post.documento}}" target="_blank">
+                            {{post.documento}}
+                            <fa-icon class="ml-1" [icon]="filePdf"></fa-icon>
+                        </a>
+
+                    </div>
+                    <div class="col-1 columna">
+                        <div class="row mb-1" *ngFor="let tag of post.tag">
+                            <span class="badge badge-pill tag">
+                                {{tag.cat.categoria}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col columna">{{post.created_at}}</div>
+                    <div class="col columna">{{post.user.name}} {{post.user.surname}}</div>
+                </div>
+            </div>
+
+            <div *ngIf="filtrar">
+
+                <div class="row mi-tabla-header">
+                    <div class="col-2 columna">Título</div>
+                    <div class="col-3 columna">Comentario</div>
+                    <div class="col columna">Documento</div>
+                    <div class="col-1 columna">Tags</div>
+                    <div class="col columna">Fecha de Creación</div>
+                    <div class="col columna">Usuario</div>
+                </div>
+                <div class="row mi-tabla-body" *ngFor="let post of tagsPost| filterPostTag: filterPostTag">
+                    <div class="col-2 columna mi-tabla-body-titulo">
+                        <a href="procedimientos/detail/{{post.post.id}}">
+                        {{post.post.titulo}}
+                    </a>
+                    </div>
+                    <div class="col-3 columna">
+                        <p class="comentario comentario-tabla">
+                            {{post.post.comentario}}
+                        </p>
+                    </div>
+                    <div class="col columna">
+                        <a href="{{url}}/{post.{post.id}}/{{post.post.documento}}" target="_blank">
+                            {{post.post.documento}}
+                            <fa-icon class="ml-1" [icon]="filePdf"></fa-icon>
+                        </a>
+                    </div>
+                    <div class="col-1 columna">
+                        <div class="row mb-1" *ngFor="let tag2 of post.post.tag">
+                            <span class="badge badge-pill tag">
+                                {{tag2.cat.categoria}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col columna">{{post.post.created_at}}</div>
+                    <div class="col columna">{{post.post.user.name}} {{post.post.user.surname}}</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

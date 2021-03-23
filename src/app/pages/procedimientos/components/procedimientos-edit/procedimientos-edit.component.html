@@ -1,0 +1,116 @@
+<app-procedimientos-toolbar></app-procedimientos-toolbar>
+<div *ngIf="!post">
+    <app-spinner-master></app-spinner-master>
+</div>
+
+<div *ngIf="!identity" class="container">
+    <div class="row ">
+        <div class="col">
+        </div>
+        <div class="col-auto  alert alert-danger mt-4">
+            Debe identificarse para editar un procedimiento
+        </div>
+        <div class="col">
+        </div>
+    </div>
+</div>
+
+<div class="contenedor" *ngIf="post && identity">
+    <div class="row align-items-center bar">
+        <div class="col">
+            <a class="enlace" (click)="salirSinGuardar()"> Volver al listado </a>
+        </div>
+    </div>
+</div>
+
+<div class="container" *ngIf="post && identity">
+
+
+    <h1 class="text-center">
+        <b>
+            Editar Procedimiento
+        </b>
+    </h1>
+
+    <form #editProcedimiento="ngForm" (ngSubmit)="onSubmit(editProcedimiento)" *ngIf="post">
+        <div class="form-group form-row">
+            <label for="exampleFormControlInput1" class="form-label">Título del Procedimiento</label>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="tituloEdit" (change)="editTitulo($event)"> <label class="custom-control-label ml-2" for="tituloEdit"></label>
+            </div>
+
+            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Escriba un título para su procedimiento..." name="title" #title="ngModel" [(ngModel)]="post.titulo" required [readOnly]="!editarTitulo">
+            <span class="text-danger float-left" *ngIf="!title.valid && title.touched">
+            El Título es obligatorio
+            </span>
+        </div>
+        <div class="form-group form-row">
+            <label for="exampleFormControlTextarea1" class="form-label">Comentario</label>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="comentariEdit" (change)="editcomentario($event)"> <label class="custom-control-label ml-2" for="comentariEdit"></label>
+            </div>
+
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Redacte un comentario que describa brevemente de que se trata el procedimiento a subir" name="coment" #coment="ngModel" [(ngModel)]="post.comentario" required [readOnly]="!editarComentario"></textarea>
+            <span class="text-danger float-left" *ngIf="!coment.valid && coment.touched">
+            Debe escribir un comentario
+            </span>
+        </div>
+        <div class="form-group form-row">
+            <div class="form-check form-check-inline" *ngFor="let categoria of categoriasOptions">
+                <input class="form-check-input" type="checkbox" (change)="selectCategoria($event,categoria)">
+                <label class="form-check-label" for="inlineCheckbox1">{{categoria.categoria}}</label>
+            </div>
+            <button class="btn btn-sm btn-danger">
+            Nuevo Tag
+        </button>
+        </div>
+        <div class="row">
+            <div class="col-auto" *ngFor="let tag of categoriasSelect">
+                <span class="badge badge-pill tag" (click)="quitarCategoria(tag)">#{{tag.categoria}}</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-2">
+                <label><b>Documento Actual</b></label>
+            </div>
+            <div class="col-6">
+                <a href="{{url}}{{post.id}}/{{post.documento}}" target="_blank">{{post.documento}}</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Para modificar el documento seleccione un nuevo archivo
+                </p>
+            </div>
+        </div>
+        <div class="form-row form-group">
+            <div class="col-4"> <input type="file" name="archivo" (change)="cargarArchivo($event)"> </div>
+            <div *ngIf="!formato">
+                <div class="alert alert-danger">
+                    No re reconoce formato del documento
+                </div>
+            </div>
+
+            <div *ngIf="loading">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+
+            <div *ngIf="loaded">
+                <div class="alert alert-success">
+                    Documento Cargado Correctamente
+                </div>
+            </div>
+        </div>
+        <div class="form-row form-group justify-content-center">
+            <button type="submit" class="btn btn-primary m-1" [disabled]="archivoNuevo && !formato">Guardar Cambios</button>
+        </div>
+    </form>
+    <div class="form-row form-group justify-content-center">
+        <button class="btn btn-danger m-1 " (click)="salirSinGuardar()">Cancelar</button>
+    </div>
+</div>

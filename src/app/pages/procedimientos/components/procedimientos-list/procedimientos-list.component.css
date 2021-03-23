@@ -1,0 +1,180 @@
+h4 {
+    font-weight: bold;
+}
+
+a {
+    color: black;
+}
+
+.documento {
+    color: rgb(180, 10, 10);
+    text-align: center;
+}
+
+.contenedor {
+    margin-left: 15%;
+    align-self: center;
+}
+
+.bar {
+    margin-left: -3.85%;
+    margin-top: 0px;
+    margin-right: 15px;
+    background: rgb(227, 233, 230);
+    height: 6em;
+}
+
+.categorias-bar {
+    background: rgb(241, 223, 169);
+    height: 4em;
+    margin-top: -8px;
+    margin-left: -5%;
+}
+
+.categorias-multi {
+    display: none;
+}
+
+.card {
+    background: rgba(221, 241, 253, 0.5);
+    width: 400px;
+    height: 325px;
+    padding: 10px;
+    margin: 10px;
+    border: solid 1px black;
+    border-radius: 2.5%;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.card:hover {
+    background: white;
+    border: solid 3px black;
+}
+
+.card-title {
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+}
+
+.card-footer {
+    min-height: 85px;
+    max-height: 85px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.card-body {
+    background: rgb(247, 247, 247);
+}
+
+.comentario {
+    height: 100%;
+    overflow-y: scroll;
+    margin-bottom: 5%;
+    text-align: justify;
+    font-size: 14px;
+}
+
+.tag {
+    background: rgb(18, 3, 105);
+    color: white;
+    letter-spacing: 1px;
+    font-size: inherit;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: none;
+    cursor: pointer;
+    overflow: hidden;
+    font-size: 10px;
+    line-height: 14px;
+    text-align: center;
+}
+
+.tag:hover {
+    background: rgb(224, 220, 220);
+    color: rgb(18, 3, 105);
+}
+
+.spinner-border {
+    height: 10rem;
+    width: 10rem;
+    margin-left: 50%;
+    margin-top: 20%;
+}
+
+.vista-icon {
+    font-size: 22px;
+}
+
+.mi-tabla {
+    margin: 0px;
+    font-size: 14px;
+    width: 80%;
+    margin-left: 94px;
+}
+
+.mi-tabla .mi-tabla-header {
+    margin-top: 20px;
+    background: rgb(59, 53, 53);
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    align-items: center;
+    border-bottom: 1px solid black;
+    height: 45px;
+}
+
+.mi-tabla .mi-tabla-header:hover {
+    color: black;
+}
+
+.mi-tabla .mi-tabla-body {
+    align-items: center;
+    border-bottom: 1px solid black;
+    margin-top: 20px;
+}
+
+.mi-tabla .mi-tabla-body .mi-tabla-body-titulo {
+    font-weight: bold;
+}
+
+.mi-tabla .row:hover {
+    background: rgb(235, 232, 232);
+}
+
+.mi-tabla .columna {
+    overflow: hidden;
+}
+
+.comentario-tabla {
+    font-size: 12px;
+    font-style: italic;
+}
+
+#tablaHistorial th {
+    text-align: center;
+}
+
+#tablaHistorial th td {
+    width: 130px;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 800px) {
+    .categorias-check {
+        display: none;
+    }
+    .categorias-multi {
+        display: inherit;
+    }
+    .vista-buscar {
+        width: auto;
+    }
+    .comentario-tabla {
+        display: none;
+    }
+    .comentario-head {
+        display: none;
+    }
+}

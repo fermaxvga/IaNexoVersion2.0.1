@@ -1,0 +1,90 @@
+<app-procedimientos-toolbar></app-procedimientos-toolbar>
+
+<div *ngIf="!post">
+    <app-spinner-master></app-spinner-master>
+</div>
+
+
+<div class="contenedor" *ngIf="post">
+    <div class="row align-items-center bar">
+
+        <div class="col mt-2">
+            <a href="procedimientos/listado"> Volver al listado      </a>
+        </div>
+
+        <div class="col mt-2 d-flex justify-content-end">
+            <a href="procedimientos/edit/{{post.id}}" [disabled]="!identity"> Editar      </a>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="box-main col-10 align-items-center">
+
+                <h1 class="text-center mt-4" id="titulo-post">{{post.titulo}}</h1>
+                <div class="comentario-box">
+                    <p class="text-justify">
+                        {{post.comentario}}
+                    </p>
+                </div>
+                <div class="documento-box text-center">
+                    Ir al documento
+                    <a href="{{url}}{{post.id}}/{{post.documento}}" target="_blank">{{post.documento}}
+                    <fa-icon class="ml-1" [icon]="filePdf"></fa-icon>
+                </a>
+                </div>
+                <div class="row">
+                    <div class="col-auto" *ngFor="let tag of post.tag.tags">
+                        <span class="badge badge-pill tag">#{{tag.cat.categoria}}</span>
+                    </div>
+                </div>
+                <div class="text-right">
+                    Fecha de creación: {{fecha_creacion.day}}/{{fecha_creacion.month}}/{{fecha_creacion.year}}
+                </div>
+                <div class="text-right">
+                    Creado por:<b> {{post.user.name}} {{post.user.surname}} </b>
+                </div>
+                <hr>
+
+
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-4" *ngIf="!verHistorial">
+                <button class="btn btn-block btn-historial" (click)="getHistorial()"> Ver Historial de Edición     </button>
+            </div>
+            <div class="col-4" *ngIf="verHistorial">
+                <button class="btn btn-block btn-historial" (click)="getHistorial()"> Ocultar Historial de Edición     </button>
+            </div>
+        </div>
+
+        <table class="table historico-table" *ngIf="verHistorial">
+            <div *ngIf="!historial">
+                <div class="spinner-border text-danger" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <thead>
+                <tr>
+                    <th scope="col">Título</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Tamaño</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Fecha (dd/mm/aa)</th>
+                    <th scope="col">Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let historico of historial">
+                    <td>{{historico.titulo}}</td>
+                    <td>{{historico.documento_name}}</td>
+                    <td>{{historico.documento_size}}</td>
+                    <td>{{historico.user.name}} {{historico.user.surname}}</td>
+                    <td>{{historico.created_at.day}} / {{historico.created_at.month}} / {{historico.created_at.year}}</td>
+                    <td>{{historico.created_at.hour}}:{{historico.created_at.minutes}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

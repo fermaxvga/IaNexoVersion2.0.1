@@ -1,0 +1,24 @@
+<app-manifiesto-toolbar></app-manifiesto-toolbar>
+<div *ngIf="!manifiesto">
+    <app-spinner-master></app-spinner-master>
+
+</div>
+
+<div *ngIf="manifiesto" class="container mt-5" style="text-align: center;">
+    <div class="row justify-content-lg-center" style="border-bottom: 0.5px solid;">
+        <div class="col-4">
+        </div>
+        <div class="col-4">
+            <img src="assets/images/newsanlogo.png" alt="image"> </div>
+        <div class="col" style="text-align: end;">
+            <b>Inserción Automática</b>
+        </div>
+    </div>
+    <div class="row" style="border-bottom: 0.5px solid;">
+        <div class="col d-flex justify-content-start"> <b>Versionado: </b>
+            <div class="ml-2">{{manifiesto.version_manifiesto}}</div>
+        </div>
+        <div class="col mt-2 d-flex justify-content-end"><b>Creado: </b>
+        </div>
+    </div>
+</div>
